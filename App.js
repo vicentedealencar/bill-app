@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
+import InAppBilling from 'react-native-billing';
 
 export default class App extends React.Component {
   render() {
@@ -16,6 +17,27 @@ export default class App extends React.Component {
 
 const onBuy = () => {
   console.log("paaaaaaaaaay")
+
+  InAppBilling.open().
+  then(() => InAppBilling.purchase('android.test.purchased'))
+  .then((details) => {
+    console.log({
+      purchaseText: details.productId
+    });
+    return InAppBilling.getProductDetails('android.test.purchased');
+  })
+  .then((productDetails) => {
+    console.log({
+      productDetailsText: productDetails.title
+    });
+    return InAppBilling.close();
+  })
+  .catch((error) => {
+    console.log({
+      error: error
+    });
+  });
+
 }
 
 const styles = StyleSheet.create({
